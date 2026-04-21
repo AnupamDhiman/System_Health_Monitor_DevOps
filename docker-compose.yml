@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+
+  monitor:
+    build: .
+    container_name: monitor
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "8000:8000"     # you can visit http://localhost:8000/metrics
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"     # Prometheus UI at http://localhost:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"     # Grafana dashboard at http://localhost:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin   # login: admin / admin
